@@ -51,6 +51,25 @@ export default NextAuth({
       clientSecret: process.env.AUTH0_SECRET,
       issuer: process.env.AUTH0_ISSUER,
     }),
+    {
+      id: "asgardeo",
+      name: "Asgardeo",
+      type: "oauth",
+      wellKnown: process.env.ASGARDEO_WELLKNOWN,
+      authorization: { params: { scope: "openid email profile" } },
+      clientId: process.env.ASGARDEO_ID,
+      clientSecret: process.env.ASGARDEO_SECRET,
+      idToken: true,
+      checks: ["pkce", "state"],
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+        }
+      },
+    }
   ],
   // The secret should be set to a reasonably long random string.
   // It is used to sign cookies and to sign and encrypt JSON Web Tokens, unless
@@ -116,5 +135,5 @@ export default NextAuth({
   },
 
   // Enable debug messages in the console if you are having problems
-  debug: false,
+  debug: true,
 })
